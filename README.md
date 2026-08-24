@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://your-live-vercel-link-here.vercel.app/">
+  <a href="https://ubuntu-portfolio-1f3uxri6u-kamataryan333-9992s-projects.vercel.app">
     <img src="https://img.shields.io/badge/🌐_Live_Portfolio-Visit_Now-E95420?style=for-the-badge" alt="Live Portfolio" />
   </a>
 </p>
