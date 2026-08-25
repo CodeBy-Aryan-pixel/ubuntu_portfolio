@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   Minus, 
   Square, 
-  Copy, 
   X, 
   Terminal, 
   Folder, 
@@ -289,7 +288,7 @@ export default function WindowFrame({
           </div>
 
           {/* Right Authentic Ubuntu Window Controls (Min, Max, Close) */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             {/* Minimize Button */}
             <button
               onClick={(e) => {
@@ -297,12 +296,12 @@ export default function WindowFrame({
                 onMinimize(id);
               }}
               title="Minimize"
-              className="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white/70 hover:text-white flex items-center justify-center transition-colors shadow-sm"
+              className="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white/70 hover:text-white flex items-center justify-center p-0 overflow-visible transition-colors shadow-sm cursor-pointer"
             >
-              <Minus className="w-3 h-3" />
+              <Minus className="w-3 h-3 overflow-visible shrink-0" strokeWidth={2.5} />
             </button>
 
-            {/* Maximize / Restore Button */}
+            {/* Maximize Button - Fully enclosed 4-sided square with no clipping */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -310,9 +309,9 @@ export default function WindowFrame({
                 onToggleMaximize(id);
               }}
               title={isMaximized || snapState !== 'none' ? "Restore" : "Maximize"}
-              className="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white/70 hover:text-white flex items-center justify-center transition-colors shadow-sm"
+              className="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white/70 hover:text-white flex items-center justify-center p-0 overflow-visible transition-colors shadow-sm cursor-pointer"
             >
-              {isMaximized || snapState !== 'none' ? <Copy className="w-2.5 h-2.5" /> : <Square className="w-2.5 h-2.5" />}
+              <Square className="w-2.5 h-2.5 overflow-visible shrink-0" strokeWidth={2.5} />
             </button>
 
             {/* Close Button */}
@@ -322,9 +321,9 @@ export default function WindowFrame({
                 onClose(id);
               }}
               title="Close"
-              className="w-5 h-5 rounded-full bg-[#E95420] hover:bg-[#FF6A35] text-white flex items-center justify-center transition-colors shadow-sm"
+              className="w-5 h-5 rounded-full bg-[#E95420] hover:bg-[#FF6A35] text-white flex items-center justify-center p-0 overflow-visible transition-colors shadow-sm cursor-pointer"
             >
-              <X className="w-3 h-3" />
+              <X className="w-3 h-3 overflow-visible shrink-0" strokeWidth={2.5} />
             </button>
           </div>
         </div>
