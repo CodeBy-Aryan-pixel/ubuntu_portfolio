@@ -35,6 +35,8 @@ const ICON_MAP = {
 };
 
 const SNAP_THRESHOLD = 20; // 20px edge snap threshold
+const TOP_BAR_HEIGHT = '32px'; // Height of global Top Bar (prevents window header overlap)
+const DOCK_WIDTH = '64px'; // Width of side Dock (prevents dock overlap)
 
 export default function WindowFrame({
   windowData,
@@ -82,8 +84,8 @@ export default function WindowFrame({
       setSnapState('none');
       
       // Center the restored window around the cursor
-      currentX = Math.max(0, Math.min(window.innerWidth - size.width, e.clientX - size.width / 2));
-      currentY = Math.max(28, e.clientY - 20);
+      currentX = Math.max(64, Math.min(window.innerWidth - size.width, e.clientX - size.width / 2));
+      currentY = Math.max(32, e.clientY - 20);
       setPosition({ x: currentX, y: currentY });
     }
 
@@ -122,7 +124,7 @@ export default function WindowFrame({
         const dy = e.clientY - dragRef.current.startY;
         
         const newX = dragRef.current.initialPosX + dx;
-        const newY = Math.max(0, dragRef.current.initialPosY + dy);
+        const newY = Math.max(32, dragRef.current.initialPosY + dy);
         
         setPosition({ x: newX, y: newY });
 
@@ -130,12 +132,12 @@ export default function WindowFrame({
         const screenWidth = window.innerWidth;
         let detectedSnap = null;
 
-        if (e.clientY <= SNAP_THRESHOLD || newY <= SNAP_THRESHOLD) {
+        if (e.clientY <= SNAP_THRESHOLD || newY <= 32 + SNAP_THRESHOLD) {
           detectedSnap = 'top'; // Maximize trigger
-        } else if (e.clientX <= SNAP_THRESHOLD || newX <= SNAP_THRESHOLD) {
-          detectedSnap = 'left'; // Left 50% split screen
+        } else if (e.clientX <= SNAP_THRESHOLD || newX <= 64 + SNAP_THRESHOLD) {
+          detectedSnap = 'left'; // Left split screen
         } else if (e.clientX >= screenWidth - SNAP_THRESHOLD || (newX + size.width) >= screenWidth - SNAP_THRESHOLD) {
-          detectedSnap = 'right'; // Right 50% split screen
+          detectedSnap = 'right'; // Right split screen
         }
 
         dragRef.current.currentSnap = detectedSnap;
@@ -193,26 +195,26 @@ export default function WindowFrame({
   let currentStyle = {};
   if (isMaximized) {
     currentStyle = {
-      top: '0px',
-      left: '0px',
-      width: '100vw',
-      height: '100vh',
+      top: TOP_BAR_HEIGHT,
+      left: DOCK_WIDTH,
+      width: `calc(100vw - ${DOCK_WIDTH})`,
+      height: `calc(100vh - ${TOP_BAR_HEIGHT})`,
       zIndex,
     };
   } else if (snapState === 'left') {
     currentStyle = {
-      top: '0px',
-      left: '0px',
-      width: '50vw',
-      height: '100vh',
+      top: TOP_BAR_HEIGHT,
+      left: DOCK_WIDTH,
+      width: `calc((100vw - ${DOCK_WIDTH}) / 2)`,
+      height: `calc(100vh - ${TOP_BAR_HEIGHT})`,
       zIndex,
     };
   } else if (snapState === 'right') {
     currentStyle = {
-      top: '0px',
-      left: '50vw',
-      width: '50vw',
-      height: '100vh',
+      top: TOP_BAR_HEIGHT,
+      left: `calc(${DOCK_WIDTH} + (100vw - ${DOCK_WIDTH}) / 2)`,
+      width: `calc((100vw - ${DOCK_WIDTH}) / 2)`,
+      height: `calc(100vh - ${TOP_BAR_HEIGHT})`,
       zIndex,
     };
   } else {
@@ -232,12 +234,18 @@ export default function WindowFrame({
       {/* 1. Translucent Snapping Preview Guide Overlay */}
       {isDragging && snapPreview && (
         <div
-          className={`fixed pointer-events-none z-[999] bg-ubuntu-orange/20 border-2 border-ubuntu-orange rounded-2xl backdrop-blur-[2px] transition-all duration-150 ${
+          style={{
+            top: TOP_BAR_HEIGHT,
+            left: snapPreview === 'right' ? `calc(${DOCK_WIDTH} + (100vw - ${DOCK_WIDTH}) / 2)` : DOCK_WIDTH,
+            width: snapPreview === 'top' ? `calc(100vw - ${DOCK_WIDTH})` : `calc((100vw - ${DOCK_WIDTH}) / 2)`,
+            height: `calc(100vh - ${TOP_BAR_HEIGHT})`,
+          }}
+          className={`fixed pointer-events-none z-[999] bg-ubuntu-orange/20 border-2 border-ubuntu-orange backdrop-blur-[2px] transition-all duration-150 ${
             snapPreview === 'top'
-              ? 'inset-0'
+              ? 'rounded-none'
               : snapPreview === 'left'
-              ? 'top-0 left-0 w-1/2 h-full rounded-r-none'
-              : 'top-0 right-0 w-1/2 h-full rounded-l-none'
+              ? 'rounded-r-none'
+              : 'rounded-l-none'
           }`}
         />
       )}
