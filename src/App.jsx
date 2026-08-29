@@ -58,8 +58,10 @@ export default function App() {
   const {
     windows,
     activeWindowId,
+    stackOrder,
     isMobile,
     openWindow,
+    focusWindow,
     closeWindow,
     minimizeWindow,
     toggleMaximize,
@@ -241,8 +243,10 @@ export default function App() {
         <Desktop
           windows={windows}
           activeWindowId={activeWindowId}
+          stackOrder={stackOrder}
           isMobile={isMobile}
           onOpenApp={handleOpenApp}
+          onFocusWindow={focusWindow}
           onCloseWindow={closeWindow}
           onMinimizeWindow={minimizeWindow}
           onToggleMaximize={toggleMaximize}

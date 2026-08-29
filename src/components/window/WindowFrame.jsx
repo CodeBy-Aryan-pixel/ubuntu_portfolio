@@ -40,6 +40,7 @@ const DOCK_WIDTH = '64px'; // Width of side Dock (prevents dock overlap)
 export default function WindowFrame({
   windowData,
   isActive,
+  zIndex: propZIndex,
   isMobile,
   onFocus,
   onClose,
@@ -47,7 +48,8 @@ export default function WindowFrame({
   onToggleMaximize,
   children,
 }) {
-  const { id, title, icon, isMaximized, defaultPosition, defaultSize, minSize, zIndex } = windowData;
+  const { id, title, icon, isMaximized, defaultPosition, defaultSize, minSize } = windowData;
+  const zIndex = propZIndex !== undefined ? propZIndex : (isActive ? 50 : (windowData.zIndex || 10));
 
   const [position, setPosition] = useState(defaultPosition || { x: 100, y: 60 });
   const [size, setSize] = useState(defaultSize || { width: 750, height: 480 });
@@ -251,6 +253,7 @@ export default function WindowFrame({
 
       {/* 2. Main Window Container */}
       <div
+        onMouseDown={() => onFocus && onFocus(id)}
         style={currentStyle}
         className={`fixed flex flex-col overflow-hidden select-none border border-white/10 ${
           isDragging ? 'transition-none' : 'transition-all duration-200 ease-out'

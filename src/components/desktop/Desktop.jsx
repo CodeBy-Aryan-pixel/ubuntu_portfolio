@@ -29,8 +29,10 @@ const TRASH_SHORTCUT = {
 export default function Desktop({
   windows,
   activeWindowId,
+  stackOrder,
   isMobile,
   onOpenApp,
+  onFocusWindow,
   onCloseWindow,
   onMinimizeWindow,
   onToggleMaximize,
@@ -153,8 +155,9 @@ export default function Desktop({
         <WindowManager
           windows={windows}
           activeWindowId={activeWindowId}
+          stackOrder={stackOrder}
           isMobile={isMobile}
-          onFocus={onOpenApp}
+          onFocus={onFocusWindow || onOpenApp}
           onClose={onCloseWindow}
           onMinimize={onMinimizeWindow}
           onToggleMaximize={onToggleMaximize}

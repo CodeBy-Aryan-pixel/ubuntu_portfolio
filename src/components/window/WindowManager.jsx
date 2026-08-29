@@ -18,6 +18,7 @@ import ErrorBoundary from '../common/ErrorBoundary';
 export default function WindowManager({
   windows,
   activeWindowId,
+  stackOrder,
   isMobile,
   onFocus,
   onClose,
@@ -37,11 +38,19 @@ export default function WindowManager({
     <div className="absolute inset-0 pointer-events-none z-10">
       {openWindows.map((win) => {
         const isActive = activeWindowId === win.id;
+        const stackIndex = stackOrder ? stackOrder.indexOf(win.id) : -1;
+        // Inactive windows get historical depth order (10 + stackIndex), active window always sits on top (50)
+        const dynamicZIndex = isActive ? 50 : 10 + (stackIndex >= 0 ? stackIndex : 0);
 
         return (
-          <div key={win.id} className="pointer-events-auto">
+          <div
+            key={win.id}
+            className="pointer-events-auto"
+            onMouseDown={() => onFocus && onFocus(win.id)}
+          >
             <WindowFrame
-              windowData={win}
+              windowData={{ ...win, zIndex: dynamicZIndex }}
+              zIndex={dynamicZIndex}
               isActive={isActive}
               isMobile={isMobile}
               onFocus={onFocus}
