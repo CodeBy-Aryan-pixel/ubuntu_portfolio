@@ -15,6 +15,8 @@ import ChatbotApp from '../apps/ChatbotApp';
 import VisionLabApp from '../apps/VisionLabApp';
 import ErrorBoundary from '../common/ErrorBoundary';
 
+import { ACTIVE_WINDOW_Z_INDEX, DEFAULT_WINDOW_Z_INDEX } from '../../constants';
+
 export default function WindowManager({
   windows,
   activeWindowId,
@@ -40,7 +42,7 @@ export default function WindowManager({
         const isActive = activeWindowId === win.id;
         const stackIndex = stackOrder ? stackOrder.indexOf(win.id) : -1;
         // Inactive windows get historical depth order (10 + stackIndex), active window always sits on top (50)
-        const dynamicZIndex = isActive ? 50 : 10 + (stackIndex >= 0 ? stackIndex : 0);
+        const dynamicZIndex = isActive ? ACTIVE_WINDOW_Z_INDEX : DEFAULT_WINDOW_Z_INDEX + (stackIndex >= 0 ? stackIndex : 0);
 
         return (
           <div
