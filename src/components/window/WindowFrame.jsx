@@ -16,6 +16,8 @@ import {
 import { FaCertificate, FaUsers, FaRobot, FaChartLine } from 'react-icons/fa';
 import { TbActivity } from 'react-icons/tb';
 
+import { ACTIVE_WINDOW_Z_INDEX, DEFAULT_WINDOW_Z_INDEX } from '../../constants';
+
 const ICON_MAP = {
   Terminal: Terminal,
   Folder: Folder,
@@ -49,7 +51,9 @@ export default function WindowFrame({
   children,
 }) {
   const { id, title, icon, isMaximized, defaultPosition, defaultSize, minSize } = windowData;
-  const zIndex = propZIndex !== undefined ? propZIndex : (isActive ? 50 : (windowData.zIndex || 10));
+  const zIndex = propZIndex !== undefined
+    ? propZIndex
+    : (isActive ? ACTIVE_WINDOW_Z_INDEX : (windowData.zIndex || DEFAULT_WINDOW_Z_INDEX));
 
   const [position, setPosition] = useState(defaultPosition || { x: 100, y: 60 });
   const [size, setSize] = useState(defaultSize || { width: 750, height: 480 });
